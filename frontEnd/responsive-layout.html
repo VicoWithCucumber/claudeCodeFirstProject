@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式网页布局</title>
+    <style>
+        /* 重置默认样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e4e4e7;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+        }
+
+        /* 页面整体布局 - 使用 Flexbox */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航栏样式 */
+        header {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 20px rgba(0, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu li a {
+            color: #e4e4e7;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-menu li a:hover {
+            background: linear-gradient(135deg, #00ffff, #0080ff);
+            color: #1a1a2e;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 移动端导航菜单切换 */
+        .menu-toggle {
+            display: none;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            display: block;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            flex: 1;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        /* 文章区域样式 */
+        .article-section {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.9) 0%, rgba(45, 45, 68, 0.9) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            flex: 7; /* 70% 宽度 */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .article-section h2 {
+            color: #00ffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .article-section p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            color: #e4e4e7;
+            line-height: 1.7;
+        }
+
+        /* 侧边栏样式 */
+        .sidebar {
+            background: linear-gradient(135deg, rgba(0, 128, 255, 0.2) 0%, rgba(128, 0, 255, 0.2) 100%);
+            color: #e4e4e7;
+            padding: 1.5rem;
+            border-radius: 12px;
+            flex: 3; /* 30% 宽度 */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(128, 0, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(128, 0, 255, 0.2);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            color: #8000ff;
+            text-shadow: 0 0 10px rgba(128, 0, 255, 0.5);
+        }
+
+        .sidebar h4 {
+            color: #00ffff;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(128, 0, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar li:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar li:hover {
+            color: #00ffff;
+            transform: translateX(5px);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        /* 页脚样式 */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 -2px 20px rgba(0, 255, 255, 0.1);
+        }
+
+        /* 响应式设计 - 小屏幕设备 (768px 及以下) */
+        @media screen and (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .article-section,
+            .sidebar {
+                flex: none;
+                width: 100%;
+            }
+
+            /* 移动端导航菜单样式 */
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+                flex-direction: column;
+                gap: 0;
+                padding: 1rem 0;
+                box-shadow: 0 2px 15px rgba(0, 255, 255, 0.2);
+                z-index: 1000;
+            }
+
+            .nav-menu li {
+                text-align: center;
+                padding: 0;
+            }
+
+            .nav-menu li a {
+                display: block;
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .nav-menu li:last-child a {
+                border-bottom: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .navbar {
+                position: relative;
+            }
+
+            /* 纯CSS实现菜单切换 */
+            .menu-toggle:checked ~ .nav-menu {
+                display: flex;
+            }
+
+            /* 汉堡菜单动画效果 */
+            .menu-toggle:checked ~ .hamburger span:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+
+            .menu-toggle:checked ~ .hamburger span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle:checked ~ .hamburger span:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+
+            /* 调整移动端的字体大小 */
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .article-section,
+            .sidebar {
+                padding: 1rem;
+            }
+        }
+
+        /* 额外的小屏幕优化 */
+        @media screen and (max-width: 480px) {
+            .main-content {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+
+            header {
+                padding: 0.8rem;
+            }
+
+            footer {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 顶部导航栏 -->
+        <header>
+            <nav class="navbar">
+                <div class="logo">我的网站</div>
+
+                <input type="checkbox" id="menu-toggle" class="menu-toggle">
+
+                <ul class="nav-menu">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#about">关于</a></li>
+                    <li><a href="#services">服务</a></li>
+                    <li><a href="#portfolio">作品</a></li>
+                    <li><a href="#contact">联系</a></li>
+                </ul>
+
+                <label for="menu-toggle" class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+            </nav>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 文章区域 -->
+            <section class="article-section">
+                <h2>主要文章内容</h2>
+                <p>这是主要文章区域的内容。在大屏幕设备上，这个区域占据70%的宽度，与右侧的侧边栏并排显示。当屏幕宽度小于或等于768px时，这个区域会扩展到100%宽度，并且侧边栏会自动移动到下方。</p>
+
+                <p>这个布局使用了现代的Flexbox技术，具有很好的灵活性和兼容性。Flexbox让我们能够轻松创建响应式布局，无需复杂的浮动或定位技巧。</p>
+
+                <p>文章内容可以是任何你想要的内容，比如博客文章、新闻、产品介绍等。这个灰色的背景色帮助我们清楚地看到文章区域的边界。</p>
+
+                <p>响应式设计是现代网页开发的重要组成部分，它确保网站在各种设备上都能提供良好的用户体验，从桌面电脑到平板电脑再到智能手机。</p>
+            </section>
+
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <h3>侧边栏</h3>
+                <p>这是侧边栏区域，通常用于显示导航链接、广告、相关文章或其他辅助信息。</p>
+
+                <h4>快速导航</h4>
+                <ul>
+                    <li>首页</li>
+                    <li>关于我们</li>
+                    <li>产品服务</li>
+                    <li>新闻动态</li>
+                    <li>联系我们</li>
+                </ul>
+
+                <h4>最新文章</h4>
+                <ul>
+                    <li>响应式设计最佳实践</li>
+                    <li>Flexbox 完全指南</li>
+                    <li>移动端开发技巧</li>
+                    <li>CSS Grid 布局教程</li>
+                </ul>
+            </aside>
+        </main>
+
+        <!-- 页脚 -->
+        <footer>
+            <p>&copy; 2024 响应式网页布局示例. 版权所有.</p>
+        </footer>
+    </div>
+</body>
+</html>

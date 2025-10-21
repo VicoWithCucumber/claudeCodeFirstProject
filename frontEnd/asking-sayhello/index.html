@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问候语生成器</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid #ff6b9d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '✨🌟⭐🎈🎀🦄🌈';
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 20px;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6b9d;
+            margin-bottom: 30px;
+            margin-top: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8e44ad;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #ff9ff3;
+            border-radius: 20px;
+            font-size: 16px;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(45deg, #fff 0%, #ffeef8 100%);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff6b9d;
+            outline: none;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 15px;
+            font-family: 'Comic Neue', cursive;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+            background: linear-gradient(45deg, #c44569, #ff6b9d);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #greeting {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, #ffeef8, #e8f5ff);
+            border-radius: 20px;
+            border: 3px solid #ff9ff3;
+            font-size: 20px;
+            color: #8e44ad;
+            min-height: 20px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #greeting::before {
+            content: '🎉';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+
+        #greeting::after {
+            content: '🎉';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+
+        .empty-greeting {
+            color: #c44569;
+            font-style: italic;
+            animation: none;
+        }
+
+        .empty-greeting::before,
+        .empty-greeting::after {
+            content: '💭';
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            color: #fff;
+            font-size: 20px;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <h1>🌟 魔法问候语生成器 🌟</h1>
+
+        <div class="input-group">
+            <label for="nameInput">🎈 请输入您的名字：</label>
+            <input type="text" id="nameInput" placeholder="✨ 在这里输入您的名字...">
+        </div>
+
+        <button onclick="generateGreeting()">🎪 生成魔法问候语 🎪</button>
+
+        <div id="greeting" class="empty-greeting">
+            点击按钮生成问候语...
+        </div>
+    </div>
+
+    <script>
+        function generateGreeting() {
+            const nameInput = document.getElementById('nameInput');
+            const greetingDiv = document.getElementById('greeting');
+            const name = nameInput.value.trim();
+
+            if (name === '') {
+                greetingDiv.textContent = '请先输入您的名字！';
+                greetingDiv.className = 'empty-greeting';
+                return;
+            }
+
+            const now = new Date();
+            const hour = now.getHours();
+            let timeGreeting;
+
+            if (hour >= 5 && hour < 12) {
+                timeGreeting = '早上好';
+            } else if (hour >= 12 && hour < 18) {
+                timeGreeting = '下午好';
+            } else {
+                timeGreeting = '晚上好';
+            }
+
+            greetingDiv.textContent = `${timeGreeting}，${name}！欢迎来到我的魔法世界！`;
+            greetingDiv.className = '';
+        }
+
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateGreeting();
+            }
+        });
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starEmojis = ['⭐', '✨', '🌟', '💫'];
+
+            for (let i = 0; i < 20; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        createStars();
+    </script>
+</body>
+</html>

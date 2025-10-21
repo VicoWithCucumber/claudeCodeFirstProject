@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见问题 FAQ</title>
+    <link rel="stylesheet" href="faq.css">
+</head>
+<body>
+    <div class="faq-container">
+        <h1>常见问题 FAQ</h1>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
+                <span>如何注册账户？</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+                <p>您可以点击页面右上角的"注册"按钮，填写必要的信息包括用户名、邮箱和密码。注册完成后，我们会发送一封确认邮件到您的邮箱，请点击邮件中的链接激活您的账户。</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
+                <span>忘记密码怎么办？</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+                <p>如果您忘记了密码，请点击登录页面的"忘记密码"链接。输入您注册时使用的邮箱地址，我们会发送重置密码的链接到您的邮箱。点击链接后，您可以设置新的密码。</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
+                <span>如何联系客服？</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+                <p>您可以通过以下方式联系我们的客服团队：1) 发送邮件至 support@example.com；2) 拨打客服热线 400-123-4567（工作日 9:00-18:00）；3) 使用网站右下角的在线客服聊天功能。我们会尽快为您解答问题。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(question) {
+            const faqItem = question.parentElement;
+            const answer = faqItem.querySelector('.faq-answer');
+            const arrow = question.querySelector('.arrow');
+
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                arrow.textContent = '▼';
+                faqItem.classList.remove('active');
+            } else {
+                answer.style.display = 'block';
+                arrow.textContent = '▲';
+                faqItem.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

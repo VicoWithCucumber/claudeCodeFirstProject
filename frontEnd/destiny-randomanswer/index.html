@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命运水晶球</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .crystal-ball {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.3) 40%, rgba(0,0,0,0.1) 100%);
+            margin: 0 auto 2rem;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .crystal-ball::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 30%;
+            height: 30%;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            filter: blur(10px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .ask-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        .ask-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .ask-button:active {
+            transform: translateY(0);
+        }
+
+        .answer-area {
+            min-height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .answer-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .answer-text.show {
+            opacity: 1;
+        }
+
+        .loading {
+            font-size: 1.2rem;
+            color: #ffd700;
+        }
+
+        .sparkle {
+            position: absolute;
+            color: #ffd700;
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔮 命运水晶球 🔮</h1>
+
+        <div class="crystal-ball" id="crystalBall"></div>
+
+        <button class="ask-button" id="askButton" onclick="getAnswer()">
+            告诉我答案！
+        </button>
+
+        <div class="answer-area">
+            <div class="answer-text" id="answerText">
+                在心中默念你的问题，然后点击按钮...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const answers = [
+            '那必须的！',
+            '想都别想。',
+            '或许可以。',
+            '建议换个问题。',
+            '天机不可泄露。',
+            '你在想屁吃！',
+            '问我干嘛，我又不是你妈。',
+            '这个问题比你还幼稚。',
+            '我的水晶球今天请假了。',
+            '答案就在风中飘荡...啊不对，是在你脑子里。',
+            '系统提示：您的问题已超出本球服务范围。',
+            '据可靠消息，答案是...我不告诉你！',
+            '水晶球表示：这题我不会。',
+            '建议您充值后再来问。',
+            '答案正在加载中...加载失败，请重试。'
+        ];
+
+        function createSparkles() {
+            const crystalBall = document.getElementById('crystalBall');
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.innerHTML = '✨';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    crystalBall.appendChild(sparkle);
+
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, i * 200);
+            }
+        }
+
+        function getAnswer() {
+            const answerText = document.getElementById('answerText');
+            const askButton = document.getElementById('askButton');
+
+            // 禁用按钮
+            askButton.disabled = true;
+            askButton.textContent = '水晶球思考中...';
+
+            // 隐藏当前答案
+            answerText.classList.remove('show');
+
+            // 创建闪烁效果
+            createSparkles();
+
+            // 显示加载文本
+            setTimeout(() => {
+                answerText.innerHTML = '<div class="loading">🔮 水晶球正在凝视命运的轨迹...</div>';
+                answerText.classList.add('show');
+            }, 500);
+
+            // 2秒后显示答案
+            setTimeout(() => {
+                const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+                answerText.classList.remove('show');
+
+                setTimeout(() => {
+                    answerText.innerHTML = `<strong>"${randomAnswer}"</strong>`;
+                    answerText.classList.add('show');
+
+                    // 重新启用按钮
+                    askButton.disabled = false;
+                    askButton.textContent = '告诉我答案！';
+                }, 300);
+            }, 2500);
+        }
+
+        // 页面加载时显示初始文本
+        window.onload = function() {
+            document.getElementById('answerText').classList.add('show');
+        };
+    </script>
+</body>
+</html>
